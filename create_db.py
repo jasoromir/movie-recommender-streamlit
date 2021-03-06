@@ -25,7 +25,7 @@ cursor.execute("""
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS actors(
 		id INTEGER PRIMARY KEY,
-		name NOT NULL
+		name NOT NULL UNIQUE
 		)
 	""")
 
@@ -33,7 +33,7 @@ cursor.execute("""
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS genres(
 		id INTEGER PRIMARY KEY,
-		name NOT NULL
+		name NOT NULL UNIQUE
 		)
 	""")
 
