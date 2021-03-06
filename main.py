@@ -6,39 +6,70 @@ import helpers as h
 from ast import literal_eval
 import sqlite3
 
+st.set_page_config(page_title="Movie Recommender", layout='wide')
 
-st.title('Streamlit for Movies Recomender')
-
-movies = pd.read_csv(c.DATA_PATH + 'movies_metadata.csv', low_memory = False)
-genre_list = set()
-for movie_gen in movies.genres:
-  list_gen = literal_eval(movie_gen)
-  for genre in list_gen:
-    genre_list.add(genre['name'])
-
-selected_genre = st.sidebar.selectbox('Select Genre', sorted(list(genre_list)))
+st.title('Movies Recomender with Streamlit')
 
 
-# Get images
 # Establish connection with our database
 connection = sqlite3.connect(c.DB_FILE)
 connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
 
-cursor.execute("""
-	SELECT title, poster_path
-	FROM movies
-	ORDER BY title
-	""")
+# GENRE SELECT
+cursor.execute("""SELECT * FROM genres ORDER BY name""")
+genres = cursor.fetchall()
+genres = [genre['name'] for genre in genres]
+genres.append('ALL')
+selected_genre = st.sidebar.selectbox('Select Genre', sorted(genres), index = 0)
+
+# YEAR SLIDER
+cursor.execute("""SELECT MAX(strftime("%Y", release_date)) as newest,
+	MIN(strftime("%Y", release_date)) as oldest
+ 	FROM movies""")
+dates = cursor.fetchone()
+oldest = dates['oldest']
+newest = dates['newest']
+
+years = st.sidebar.slider('Movies between:', int(oldest), int(newest), (int(oldest), int(newest)))
+
+
+
+# Get images
+if selected_genre != 'ALL':
+	st.markdown(f"## **List of Best {selected_genre} Movies between {years[0]} - {years[1]}**")
+	cursor.execute(""" 
+		SELECT title, poster_path, scores
+		FROM movies 
+		JOIN movie_genres 
+			ON movies.id = movie_genres.movie_id
+		JOIN genres
+			ON genres.id = movie_genres.genre_id
+		WHERE genres.name = ? 
+			AND strftime("%Y", movies.release_date) >= ?
+			AND strftime("%Y", movies.release_date) <= ?
+		ORDER BY scores DESC, title
+		LIMIT 30 """, (selected_genre,str(years[0]), str(years[1])))
+else:
+	st.markdown(f"## **List of Best Movies between {years[0]} - {years[1]}**")
+	cursor.execute(""" SELECT title, poster_path, scores
+		FROM movies
+		WHERE strftime("%Y", release_date) >= ?
+			AND strftime("%Y", release_date) <= ?
+		ORDER BY scores DESC, title
+		LIMIT 30""", (str(years[0]), str(years[1])))
 
 movies_db = cursor.fetchall()
-st.text(movies_db[0])
 
+
+scores = [f"Score: {movie['scores']}" for movie in movies_db]
 titles = [title['title'] for title in movies_db]
-links = [f"https://www.themoviedb.org/{link['poster_path']}" for link in movies_db]
+captions = [caption for caption in zip(titles, scores)]
+default_link = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Image-missing.svg/480px-Image-missing.svg.png"
+links = [f"https://www.themoviedb.org/{link['poster_path']}" if link['poster_path'] is not None else default_link for link in movies_db ]
 
 
-st.image(links ,width=100 , caption = titles)
+st.image(links ,width=180 , caption =captions)
 # # 10% most voted movies
 # C = metadata['vote_average'].mean()
 # m = metadata['vote_count'].quantile(0.9)
