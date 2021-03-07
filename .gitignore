@@ -1,0 +1,5 @@
+# 
+/data
+sqlite3.exe
+movies_db.db
+__pycache__
