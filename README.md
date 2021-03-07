@@ -23,16 +23,16 @@ Anyway, I wanted to test my idea, so I decided to build that system myself. As a
 ## Components
 ![App interface](/images/display.png "Display APP")
 
-Streamlit -> Display the app (working on deployment)
-SQLite3 -> For easier and faster access to the database
-BeautifulSoup -> Parsing data from the web
+Streamlit -> Display the app (working on deployment)  
+SQLite3 -> For easier and faster access to the database  
+BeautifulSoup -> Parsing data from the web  
 
 ````python
 pip install -r requirements.txt 
 pip3 install -r requirements.txt
 ````
 
-## Recommendation systems
+## Types of recommendations
 
 
 * **Content-based recommenders:** suggest similar items based on a particular item. This system uses item metadata, such as genre, director, description, actors, etc. for movies, to make these recommendations. The general idea behind these recommender systems is that if a person likes a particular item, he or she will also like an item that is similar to it. And to recommend that, it will make use of the user's past item metadata. A good example could be YouTube, where based on your history, it suggests you new videos that you could potentially watch.
