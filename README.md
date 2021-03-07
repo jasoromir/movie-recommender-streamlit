@@ -10,6 +10,7 @@ Then, one night in bed I had a great idea "What if I could create a recommendati
 Next day, I checked on Youtube and that option was already implemented, but since I don't use the platform that much I had not been aware of it.
 
 Anyway, I wanted to test my idea, so I decided to build that system myself. As a proof of concept, instead of using the Youtube database, I will implement it using the MovieLens Dataset, that can be downloaded from Kaggle.
+
 [-> Link to download dataset from Kaggle <-](https://www.kaggle.com/rounakbanik/the-movies-dataset?select=ratings.csv) in the 
 
 ## About the dataset
@@ -21,7 +22,15 @@ Anyway, I wanted to test my idea, so I decided to build that system myself. As a
 
 ## Components
 ![App interface](/images/display.png "Display APP")
-To  
+
+Streamlit -> Display the app (working on deployment)
+SQLite3 -> For easier and faster access to the database
+BeautifulSoup -> Parsing data from the web
+
+````python
+pip install -r requirements.txt 
+pip3 install -r requirements.txt
+````
 
 ## Recommendation systems
 
@@ -36,8 +45,4 @@ To
 
 
 
-
-[-> Link to download dataset from Kaggle <-](https://www.kaggle.com/rounakbanik/the-movies-dataset?select=ratings.csv)
-
-These files contain metadata for all 45,000 movies listed in the Full MovieLens Dataset. 
 
