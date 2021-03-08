@@ -1,6 +1,8 @@
 
 # Movie Recommender System
 
+## Description
+
 Usually, when I go on Youtube I like to find videos related to Data Science or Deep Learning that I have not seen before.
 However, sporadically I like to find songs, humoristic videos or even watch some matches of professional League of Legends.
 The problem with this is that Youtube would start recommending me music or videogames clips in which I am not really interested.
@@ -11,17 +13,26 @@ Next day, I checked on Youtube and that option was already implemented, but sinc
 
 Anyway, I wanted to test my idea, so I decided to build that system myself. As a proof of concept, instead of using the Youtube database, I will implement it using the MovieLens Dataset, that can be downloaded from Kaggle.
 
+![App interface](/images/display.png "Display APP")
+
 [-> Link to download dataset from Kaggle <-](https://www.kaggle.com/rounakbanik/the-movies-dataset?select=ratings.csv) in the 
 
-## About the dataset
+### About the dataset
 
 >The dataset consists of movies released on or before July 2017. Data points include cast, crew, plot keywords, budget, revenue, posters, release dates, languages, production companies, countries, TMDB vote counts and vote averages.
 >This dataset also has files containing 26 million ratings from 270,000 users for all 45,000 movies. Ratings are on a scale of 1-5 and have been obtained from the official GroupLens website.
 
+
+### Table of Contents
+**[Description](#description)**<br>
+**[Installation](#installation)**<br>
+**[Usage Instructions](#usage-instructions)**<br>
+
+
 ---
 
-## Components
-![App interface](/images/display.png "Display APP")
+## Installation
+
 
 Streamlit -> Display the app (working on deployment)  
 SQLite3 -> For easier and faster access to the database  
@@ -31,8 +42,8 @@ BeautifulSoup -> Parsing data from the web
 pip install -r requirements.txt 
 pip3 install -r requirements.txt
 ````
-
-## Types of recommendations
+## Usage Instructions
+### Types of recommendations
 
 
 * **Content-based recommenders:** suggest similar items based on a particular item. This system uses item metadata, such as genre, director, description, actors, etc. for movies, to make these recommendations. The general idea behind these recommender systems is that if a person likes a particular item, he or she will also like an item that is similar to it. And to recommend that, it will make use of the user's past item metadata. A good example could be YouTube, where based on your history, it suggests you new videos that you could potentially watch.
