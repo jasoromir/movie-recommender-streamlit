@@ -10,9 +10,9 @@ cursor.execute("""
 	CREATE TABLE IF NOT EXISTS movies(
 		id INTEGER PRIMARY KEY,
 		movieDB_id INTEGER NOT NULL UNIQUE,
-		title TEXT NOT NULL,
+		title TEXT NOT NULL UNIQUE,
 		duration NOT NULL,
-		vote_counts TEXT NOT NULL,
+		vote_counts INTEGER NOT NULL,
 		vote_average NOT NULL,
 		release_date NOT NULL,
 		poster_path,
@@ -58,6 +58,26 @@ cursor.execute("""
 		FOREIGN KEY (actor_id) REFERENCES actors (id)
 		)
 	""")
+
+# Table for KEYWORDS
+cursor.execute("""
+	CREATE TABLE IF NOT EXISTS keywords(
+		id INTEGER PRIMARY KEY,
+		name NOT NULL UNIQUE
+		)
+	""")
+
+# Relational table MOVIE-KEYWORD
+cursor.execute("""
+	CREATE TABLE IF NOT EXISTS movie_keywords(
+		id INTEGER PRIMARY KEY,
+		movie_id INTEGER NOT NULL,
+		keyword_id INTEGER NOT NULL,
+		FOREIGN KEY (movie_id) REFERENCES movies (id)
+		FOREIGN KEY (keyword_id) REFERENCES keywords (id)
+		)
+	""")
+
 
 # Commit changes to the database
 connection.commit()

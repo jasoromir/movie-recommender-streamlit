@@ -9,12 +9,13 @@ connection = sqlite3.connect(c.DB_FILE)
 connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
 
+# Recompute the Score based on a weighted metric
 cursor.execute("""SELECT id, vote_counts, vote_average FROM movies""")
 movies = cursor.fetchall()
 
 ids = [movie['id'] for movie in movies]
 vote_counts = [int(float(movie['vote_counts'])) for movie in movies]
-vote_average = [int(float(movie['vote_average'])) for movie in movies]
+vote_average = [float(movie['vote_average']) for movie in movies]
 
 scores = h.weighted_rating(vote_counts, vote_average)
 

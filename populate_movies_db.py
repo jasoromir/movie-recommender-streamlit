@@ -15,6 +15,8 @@ most_voted = movies['vote_count'].quantile(0.9)
 most_voted_movies = movies.loc[movies['vote_count'] >= most_voted]
 
 credits = pd.read_csv(c.DATA_PATH + 'credits.csv', low_memory = False)
+keywords_df = pd.read_csv(c.DATA_PATH + 'keywords.csv')
+
 
 cursor = connection.cursor()
 
@@ -31,6 +33,7 @@ for idx , movie in most_voted_movies.iterrows():
 		director = h.get_director(movieDB_id, credits)
 		actors = h.get_main_actors(movieDB_id, credits)
 		genres = h.get_genres(movieDB_id, most_voted_movies)
+		keywords = h.get_keywords(movieDB_id, keywords_df)
 
 		print(f"{idx} {title}")
 		try:
@@ -68,6 +71,18 @@ for idx , movie in most_voted_movies.iterrows():
 				pass
 
 
+		for keyword in keywords:	
+			try:
+				# print(f"Adding genre: {genre}")
+				cursor.execute("""
+					INSERT INTO keywords (name) VALUES (?)
+					""", (keyword,))
+			except Exception as e:
+				# print(f"This genre: {genre} already existed")
+				# print(e) 	
+				pass
+
+
 		cursor.execute("""SELECT id FROM movies WHERE title == ?""", (title,))
 		movie_id = cursor.fetchone()[0]
 		for genre in genres:
@@ -85,6 +100,12 @@ for idx , movie in most_voted_movies.iterrows():
 					INSERT INTO movie_actors (movie_id, actor_id) VALUES (?,?)
 					""", (movie_id,actor_id))
 
+		for keyword in keywords:
+			cursor.execute("""SELECT id FROM keywords WHERE name == ?""", (keyword,))
+			keyword_id = cursor.fetchone()[0]
+			cursor.execute("""
+					INSERT INTO movie_keywords (movie_id, keyword_id) VALUES (?,?)
+					""", (movie_id,keyword_id))	
 
 connection.commit()
 
