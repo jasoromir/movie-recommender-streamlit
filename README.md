@@ -13,9 +13,13 @@ Next day, I checked on Youtube and that option was already implemented, but sinc
 
 Anyway, I wanted to test my idea, so I decided to build that system myself. As a proof of concept, instead of using the Youtube database, I will implement it using the MovieLens Dataset, that can be downloaded from Kaggle.
 
-![App interface](/images/display.png "Display APP")
+[-> Link to download dataset from Kaggle <-](https://www.kaggle.com/rounakbanik/the-movies-dataset?select=ratings.csv)
 
-[-> Link to download dataset from Kaggle <-](https://www.kaggle.com/rounakbanik/the-movies-dataset?select=ratings.csv) in the 
+**NOTE:** Yes, I know! If you visit the projects at Kaggle there are hundreds of repeated implementations of the same EDA processes and the same methods for recommendations using this dataset. THis project aims to be more unique and personalized using other methods and a web user interface using ["streamlit"](https://streamlit.io/)
+
+![App interface](/images/display.png "Display APP")
+(WORKING ON DEPLOYMENT)
+
 
 ### About the dataset
 
