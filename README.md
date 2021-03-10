@@ -18,6 +18,7 @@ Anyway, I wanted to test my idea, so I decided to build that system myself. As a
 **NOTE:** Yes, I know! If you visit the projects at Kaggle there are hundreds of repeated implementations of the same EDA processes and the same methods for recommendations using this dataset. THis project aims to be more unique and personalized using other methods and a web user interface using ["streamlit"](https://streamlit.io/)
 
 ![App interface](/images/display.png "Display APP")
+
 (WORKING ON DEPLOYMENT)
 
 
