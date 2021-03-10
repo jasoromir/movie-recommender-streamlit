@@ -19,7 +19,7 @@ Anyway, I wanted to test my idea, so I decided to build that system myself. As a
 
 ![App interface](/images/display.png "Display APP")
 
-(WORKING ON DEPLOYMENT)
+(CURRENTLY IT WORKS LOCALLY, WORKING ON DEPLOYMENT)
 
 
 ### About the dataset
