@@ -20,10 +20,18 @@ vote_average = [float(movie['vote_average']) for movie in movies]
 scores = h.weighted_rating(vote_counts, vote_average)
 
 
-#cursor.execute("""ALTER TABLE movies ADD COLUMN scores3""")
+cursor.execute("""ALTER TABLE movies ADD scores DECIMAL(3,2) NOT NULL""")
 
 for idx, score in zip(ids,scores):
-	cursor.execute("""UPDATE movies SET scores = ? WHERE id = ?""", (round(score,2),idx))
+	cursor.execute("""UPDATE movies SET scores = %s WHERE id = %s""", (score,idx))
 
 connection.commit()
+
+
+#cursor.execute("""ALTER TABLE movies ADD COLUMN scores3""")
+
+# for idx, score in zip(ids,scores):
+# 	cursor.execute("""UPDATE movies SET scores = ? WHERE id = ?""", (round(score,2),idx))
+
+# connection.commit()
 
