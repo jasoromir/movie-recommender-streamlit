@@ -7,7 +7,7 @@ import streamlit as st
 # Here, we will use: TITLE; GENRE, DIRECTOR, ACTORS, KEYWORDS
 def get_cos_sim():
 	try:
-		cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix.npy")
+		cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix_small.npy")
 		#print('Loaded similarity matrix')
 	except Exception as e:
 		st.write('Computing similarity matrix')

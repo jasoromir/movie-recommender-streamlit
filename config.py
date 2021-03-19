@@ -4,6 +4,12 @@ import os
 current_dir = os.getcwd()
 DB_FILE = f'{current_dir}/movies_db.db'
 
+DB_NAME = "movies_DB"
+USERNAME = "jason_movies"
+PASSWORD= "12345678"
+HOST= "database-2.c8uvtsge2win.eu-west-3.rds.amazonaws.com"
+PORT= "3306"
+
 MOVIES_PER_ROW = 5
 DATA_PATH = f"{current_dir}/data/"
 MOVIE_DB_URL = "https://www.themoviedb.org/"
@@ -15,3 +21,4 @@ rec_description = dict()
 rec_description['Generalized recommendations'] = "These recommendations are based on movie popularity"
 rec_description['Content-based recommendations'] = "Recommend similar movies based on a particular movie."
 rec_description['Collaborative recomendations'] = "Recommends movies based on past ratings and preferences of other 'similar' users. (DEVELOPING)"
+
