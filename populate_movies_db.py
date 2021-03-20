@@ -47,7 +47,7 @@ for idx , movie in most_voted_movies.iterrows():
       try:
         # print(f"Adding actor: {actor}")
         cursor.execute("""
-          INSERT INTO actors (name) VALUES (%s)
+          INSERT IGNORE INTO actors (name) VALUES (%s)
           """, (actor,))
       except Exception as e:
         # print(f"This actor: {actor} already existed")
@@ -58,7 +58,7 @@ for idx , movie in most_voted_movies.iterrows():
       try:
         # print(f"Adding genre: {genre}")
         cursor.execute("""
-          INSERT INTO genres (name) VALUES (%s)
+          INSERT IGNORE INTO genres (name) VALUES (%s)
           """, (genre,))
       except Exception as e:
         # print(f"This genre: {genre} already existed")
@@ -70,7 +70,7 @@ for idx , movie in most_voted_movies.iterrows():
       try:
         # print(f"Adding genre: {genre}")
         cursor.execute("""
-          INSERT INTO keywords (name) VALUES (%s)
+          INSERT IGNORE INTO keywords (name) VALUES (%s)
           """, (keyword,))
       except Exception as e:
         # print(f"This genre: {genre} already existed")

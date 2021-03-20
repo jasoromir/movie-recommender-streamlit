@@ -14,7 +14,7 @@ cursor.execute("""
 	CREATE TABLE IF NOT EXISTS movies(
     id INT AUTO_INCREMENT PRIMARY KEY,
     movieDB_id INT NOT NULL UNIQUE,
-    title VARCHAR(100) NOT NULL UNIQUE,
+    title VARCHAR(100) NOT NULL,
     duration VARCHAR(20) NOT NULL,
     vote_counts INT NOT NULL,
     vote_average DECIMAL(3,2) NOT NULL,

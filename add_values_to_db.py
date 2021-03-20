@@ -27,6 +27,8 @@ for idx, score in zip(ids,scores):
 
 connection.commit()
 
+#cursor.execute("""ALTER TABLE movies DROP COLUMN scores""")
+
 
 #cursor.execute("""ALTER TABLE movies ADD COLUMN scores3""")
 
