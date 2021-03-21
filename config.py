@@ -1,13 +1,14 @@
 import os
+import secrets
 
 # Database
 current_dir = os.getcwd()
 DB_FILE = f'{current_dir}/movies_db.db'
 
 DB_NAME = "movies_DB"
-USERNAME = "jason_movies"
-PASSWORD= "12345678"
-HOST= "database-2.c8uvtsge2win.eu-west-3.rds.amazonaws.com"
+USERNAME = secrets.USERNAME
+PASSWORD= secrets.PASSWORD
+HOST= secrets.HOST
 PORT= "3306"
 
 MOVIES_PER_ROW = 5
