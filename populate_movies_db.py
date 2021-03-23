@@ -109,8 +109,9 @@ for idx , movie in most_voted_movies.iterrows():
           cursor.execute("""
               INSERT INTO movie_keywords (movie_id, keyword_id) VALUES (%s,%s)
               """, (movie_id,keyword_id))	
-        except Exception as e:
-          pass
+
+      except Exception as e:
+        pass
 
 connection.commit()  
 
