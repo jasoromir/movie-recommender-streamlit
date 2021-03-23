@@ -11,7 +11,7 @@ cursor.execute("""USE movies_DB""")
 # Read movies from CSV file
 movies = pd.read_csv(c.DATA_PATH + 'movies_metadata.csv', low_memory = False)
 # 10% most voted movies
-most_voted = movies['vote_count'].quantile(0.97)
+most_voted = movies['vote_count'].quantile(0.70)
 most_voted_movies = movies.loc[movies['vote_count'] >= most_voted]
 
 credits = pd.read_csv(c.DATA_PATH + 'credits.csv', low_memory = False)
@@ -31,79 +31,84 @@ for idx , movie in most_voted_movies.iterrows():
     vote_average = movie['vote_average']
     release_date = movie['release_date']
     popularity = movie['popularity']
-    poster_path = h.get_poster_path(movieDB_id)
-    director = h.get_director(movieDB_id, credits)
-    actors = h.get_main_actors(movieDB_id, credits)
-    genres = h.get_genres(movieDB_id, most_voted_movies)
-    keywords = h.get_keywords(movieDB_id, keywords_df)
 
-    try:
-      print(f"Adding movie: {title} with ID:{movieDB_id}")
-      cursor.execute("""
-          INSERT INTO movies (movieDB_id, title, duration, vote_counts, vote_average, 
-          release_date, poster_path, popularity, director) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-          """, (movieDB_id, title, duration, vote_counts, vote_average, release_date, poster_path, popularity, director))
-    except Exception as e:
-          print(f"This movie:{title} already existed")
-          # print(e) 
+     # CHeck if the movie is already in the database
+    cursor.execute("""SELECT * FROM movies WHERE movieDB_id = %s""", (movieDB_id,))
+    if cursor.fetchone() is None:
+
+      poster_path = h.get_poster_path(movieDB_id)
+      director = h.get_director(movieDB_id, credits)
+      actors = h.get_main_actors(movieDB_id, credits)
+      genres = h.get_genres(movieDB_id, most_voted_movies)
+      keywords = h.get_keywords(movieDB_id, keywords_df)
+
+      try:
+        print(f"Adding movie: {title} with ID:{movieDB_id}")
+        cursor.execute("""
+            INSERT INTO movies (movieDB_id, title, duration, vote_counts, vote_average, 
+            release_date, poster_path, popularity, director) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """, (movieDB_id, title, duration, vote_counts, vote_average, release_date, poster_path, popularity, director))
+      except Exception as e:
+            print(f"This movie:{title} already existed")
+            # print(e) 
+            pass
+      for actor in actors:	
+        try:
+          # print(f"Adding actor: {actor}")
+          cursor.execute("""
+            INSERT IGNORE INTO actors (name) VALUES (%s)
+            """, (actor,))
+        except Exception as e:
+          # print(f"This actor: {actor} already existed")
+          # print(e) 	
           pass
-    for actor in actors:	
-      try:
-        # print(f"Adding actor: {actor}")
+
+      for genre in genres:	
+        try:
+          # print(f"Adding genre: {genre}")
+          cursor.execute("""
+            INSERT IGNORE INTO genres (name) VALUES (%s)
+            """, (genre,))
+        except Exception as e:
+          # print(f"This genre: {genre} already existed")
+          # print(e) 	
+          pass
+
+
+      for keyword in keywords:	
+        try:
+          # print(f"Adding genre: {genre}")
+          cursor.execute("""
+            INSERT IGNORE INTO keywords (name) VALUES (%s)
+            """, (keyword,))
+        except Exception as e:
+          # print(f"This genre: {genre} already existed")
+          # print(e) 	
+          pass
+
+
+      cursor.execute("""SELECT id FROM movies WHERE title = %s """, (title,))
+      movie_id = cursor.fetchone()['id']
+      for genre in genres:
+        cursor.execute("""SELECT id FROM genres WHERE name = %s """, (genre,))
+        genre_id = cursor.fetchone()['id']
         cursor.execute("""
-          INSERT IGNORE INTO actors (name) VALUES (%s)
-          """, (actor,))
-      except Exception as e:
-        # print(f"This actor: {actor} already existed")
-        # print(e) 	
-        pass
+            INSERT INTO movie_genres (movie_id, genre_id) VALUES (%s,%s)
+            """, (movie_id,genre_id))
 
-    for genre in genres:	
-      try:
-        # print(f"Adding genre: {genre}")
+      for actor in actors:
+        cursor.execute("""SELECT id FROM actors WHERE name = %s""", (actor,))
+        actor_id = cursor.fetchone()['id']
         cursor.execute("""
-          INSERT IGNORE INTO genres (name) VALUES (%s)
-          """, (genre,))
-      except Exception as e:
-        # print(f"This genre: {genre} already existed")
-        # print(e) 	
-        pass
+            INSERT INTO movie_actors (movie_id, actor_id) VALUES (%s,%s)
+            """, (movie_id,actor_id))
 
-
-    for keyword in keywords:	
-      try:
-        # print(f"Adding genre: {genre}")
+      for keyword in keywords:
+        cursor.execute("""SELECT id FROM keywords WHERE name = %s""", (keyword,))
+        keyword_id = cursor.fetchone()['id']
         cursor.execute("""
-          INSERT IGNORE INTO keywords (name) VALUES (%s)
-          """, (keyword,))
-      except Exception as e:
-        # print(f"This genre: {genre} already existed")
-        # print(e) 	
-        pass
-
-
-    cursor.execute("""SELECT id FROM movies WHERE title = %s """, (title,))
-    movie_id = cursor.fetchone()['id']
-    for genre in genres:
-      cursor.execute("""SELECT id FROM genres WHERE name = %s """, (genre,))
-      genre_id = cursor.fetchone()['id']
-      cursor.execute("""
-          INSERT INTO movie_genres (movie_id, genre_id) VALUES (%s,%s)
-          """, (movie_id,genre_id))
-
-    for actor in actors:
-      cursor.execute("""SELECT id FROM actors WHERE name = %s""", (actor,))
-      actor_id = cursor.fetchone()['id']
-      cursor.execute("""
-          INSERT INTO movie_actors (movie_id, actor_id) VALUES (%s,%s)
-          """, (movie_id,actor_id))
-
-    for keyword in keywords:
-      cursor.execute("""SELECT id FROM keywords WHERE name = %s""", (keyword,))
-      keyword_id = cursor.fetchone()['id']
-      cursor.execute("""
-          INSERT INTO movie_keywords (movie_id, keyword_id) VALUES (%s,%s)
-          """, (movie_id,keyword_id))	
+            INSERT INTO movie_keywords (movie_id, keyword_id) VALUES (%s,%s)
+            """, (movie_id,keyword_id))	
 
 connection.commit()  
 

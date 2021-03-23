@@ -199,7 +199,7 @@ def display_movies(ids, links, titles, scores):
 		prev_id = m_id
 
 		components[m_id]["col"] = cols[col]
-		components[m_id]["col"].write(f"**{title[0:20] }** \n\n ({score})")
+		components[m_id]["col"].write(f"**{title[0:50] }**  \n\n ({score})")
 		#components[m_id]["col"].write(f"{components[m_id]["title"]} | {components[m_id]["score"]}")
 		components[m_id]["col"].image(components[m_id]["link"], width=180)
 		components[m_id]["slider"] = components[m_id]["col"].slider('Like', 0, 5, key = m_id)
