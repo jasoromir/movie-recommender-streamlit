@@ -202,7 +202,7 @@ def display_movies(ids, links, titles, scores):
 		components[m_id]["col"].write(f"**{title[0:50] }**  \n\n ({score})")
 		#components[m_id]["col"].write(f"{components[m_id]["title"]} | {components[m_id]["score"]}")
 		components[m_id]["col"].image(components[m_id]["link"], width=180)
-		components[m_id]["slider"] = components[m_id]["col"].slider('Like', 0, 5, key = m_id)
+		components[m_id]["slider"] = components[m_id]["col"].slider('Like', 0, 10, key = m_id)
 
 def get_recommendation_method():
 	rec_method = st.sidebar.selectbox('Recommendation based on:', c.rec_methods, index = 0)
