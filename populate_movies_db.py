@@ -86,29 +86,31 @@ for idx , movie in most_voted_movies.iterrows():
           # print(e) 	
           pass
 
+      try:
+        cursor.execute("""SELECT id FROM movies WHERE title = %s """, (title,))
+        movie_id = cursor.fetchone()['id']
+        for genre in genres:
+          cursor.execute("""SELECT id FROM genres WHERE name = %s """, (genre,))
+          genre_id = cursor.fetchone()['id']
+          cursor.execute("""
+              INSERT INTO movie_genres (movie_id, genre_id) VALUES (%s,%s)
+              """, (movie_id,genre_id))
 
-      cursor.execute("""SELECT id FROM movies WHERE title = %s """, (title,))
-      movie_id = cursor.fetchone()['id']
-      for genre in genres:
-        cursor.execute("""SELECT id FROM genres WHERE name = %s """, (genre,))
-        genre_id = cursor.fetchone()['id']
-        cursor.execute("""
-            INSERT INTO movie_genres (movie_id, genre_id) VALUES (%s,%s)
-            """, (movie_id,genre_id))
+        for actor in actors:
+          cursor.execute("""SELECT id FROM actors WHERE name = %s""", (actor,))
+          actor_id = cursor.fetchone()['id']
+          cursor.execute("""
+              INSERT INTO movie_actors (movie_id, actor_id) VALUES (%s,%s)
+              """, (movie_id,actor_id))
 
-      for actor in actors:
-        cursor.execute("""SELECT id FROM actors WHERE name = %s""", (actor,))
-        actor_id = cursor.fetchone()['id']
-        cursor.execute("""
-            INSERT INTO movie_actors (movie_id, actor_id) VALUES (%s,%s)
-            """, (movie_id,actor_id))
-
-      for keyword in keywords:
-        cursor.execute("""SELECT id FROM keywords WHERE name = %s""", (keyword,))
-        keyword_id = cursor.fetchone()['id']
-        cursor.execute("""
-            INSERT INTO movie_keywords (movie_id, keyword_id) VALUES (%s,%s)
-            """, (movie_id,keyword_id))	
+        for keyword in keywords:
+          cursor.execute("""SELECT id FROM keywords WHERE name = %s""", (keyword,))
+          keyword_id = cursor.fetchone()['id']
+          cursor.execute("""
+              INSERT INTO movie_keywords (movie_id, keyword_id) VALUES (%s,%s)
+              """, (movie_id,keyword_id))	
+        except Exception as e:
+          pass
 
 connection.commit()  
 
