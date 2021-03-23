@@ -1,14 +1,14 @@
 import os
-import secrets
+import my_secrets as s
 
 # Database
 current_dir = os.getcwd()
 DB_FILE = f'{current_dir}/movies_db.db'
 
 DB_NAME = "movies_DB"
-USERNAME = secrets.USERNAME
-PASSWORD= secrets.PASSWORD
-HOST= secrets.HOST
+USERNAME = s.USERNAME
+PASSWORD= s.PASSWORD
+HOST= s.HOST
 PORT= "3306"
 
 MOVIES_PER_ROW = 5

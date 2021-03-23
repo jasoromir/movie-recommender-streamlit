@@ -8,6 +8,8 @@ import streamlit as st
 def get_cos_sim():
 	try:
 		cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix_small.npy")
+		#st.write(cos_sim.shape)
+		#TODO if shape is different to loaded movies: iincorporate new movies instead of recomputing
 		#print('Loaded similarity matrix')
 	except Exception as e:
 		st.write('Computing similarity matrix')

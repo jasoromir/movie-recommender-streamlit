@@ -13,7 +13,7 @@ st.title('Movies Recomender with Streamlit')
 
 
 # GENRE SELECT
-genres = h.get_genres()
+genres = h.get_genres_for_display()
 selected_genre = st.sidebar.selectbox('Select Genre', sorted(genres), index = 0)
 
 
@@ -68,6 +68,7 @@ elif rec_method == 'Content-based recommendations':
 		content_based_rec.get_recommendations(movie_id, years, images_per_page, offset)
 	except Exception as e:
 		st.markdown(f"## **Search for a movie in the Sidebar**")
+		st.success("Write the title of a movie in the field")
 		st.write(e)
 
 

@@ -80,7 +80,7 @@ def connect_db():
 	cursor.execute("""USE movies_DB""")
 	return cursor
 
-def get_genres():
+def get_genres_for_display():
 	cursor = connect_db()
 
 	cursor.execute("""SELECT * FROM genres ORDER BY name""")
@@ -250,6 +250,10 @@ def compute_sim_mat():
 	movie_director= [d['director'] for d in data]
 	movie_title = [d['title'] for d in data]
 
+	
+	total_movies = len(movie_id)
+	count = 0
+	computing_bar = st.progress(round(count/total_movies*100))
 	# FOR EACH MOVIE BUILD A SET OF FEATURES
 	movie_features = []
 	for (idx, director) in zip(movie_id, movie_director):
@@ -302,13 +306,15 @@ def compute_sim_mat():
 		features = f'{director} {" ".join(actors)} {" ".join(genres)} {" ".join(keywords)}' 
 		movie_features.append(features)
 
+		count += 1
+		computing_bar.progress(round(count/total_movies*100))
 	return compute_cosine_similarity(movie_features)
 
 
 def get_movies_content_based(sorted_scores, years, images_per_page, offset):
 
 	movie_indexes = [score[0]+1 for score in sorted_scores][1:]
-	
+
 	cursor = connect_db()
 	# SQLITE3
 	# cursor.execute(""" SELECT DISTINCT(id), title, poster_path, scores 
@@ -328,18 +334,26 @@ def get_movies_content_based(sorted_scores, years, images_per_page, offset):
 
 	movies = cursor.fetchall()
 
-	st.write(f"Score: {movies[0]['scores']}")
+	# Eliminate from movie_indexes, the movies that do not fall in the time range
+	ids = [movie['id']-1 for movie in movies]
+	movie_indexes = [ids.index(idx) for idx in movie_indexes if idx in ids]
+
+
 	# COMPONENTS
 	scores, titles, ids, links = [], [], [], []
 	for idx in range(images_per_page*offset,images_per_page*(offset+1)):
-		movie_idx = movie_indexes[idx]-1
-		scores.append(f"Score: {movies[movie_idx]['scores']}")
-		titles.append(movies[movie_idx]['title']) 
-		ids.append(movie_idx)
-		if  movies[movie_idx]['poster_path'] is not None:
-			links.append(f"{c.MOVIE_DB_URL}{movies[movie_idx]['poster_path']}")
-		else:
-			links.append(c.NO_IMAGE)
+
+		try:
+			movie_idx = movie_indexes[idx]-1
+			scores.append(f"Score: {movies[movie_idx]['scores']}")
+			titles.append(movies[movie_idx]['title']) 
+			ids.append(movie_idx)
+			if  movies[movie_idx]['poster_path'] is not None:
+				links.append(f"{c.MOVIE_DB_URL}{movies[movie_idx]['poster_path']}")
+			else:
+				links.append(c.NO_IMAGE)
+		except:
+			pass
 
 
 
