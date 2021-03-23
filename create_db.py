@@ -1,4 +1,5 @@
-import sqlite3, config
+import sqlite3 
+import config as c
 import pymysql
 
 

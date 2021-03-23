@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, pymysql
 import config as c
 import pandas as pd
 import helpers as h
@@ -11,14 +11,18 @@ cursor.execute("""USE movies_DB""")
 # Read movies from CSV file
 movies = pd.read_csv(c.DATA_PATH + 'movies_metadata.csv', low_memory = False)
 # 10% most voted movies
-most_voted = movies['vote_count'].quantile(0.9)
+most_voted = movies['vote_count'].quantile(0.97)
 most_voted_movies = movies.loc[movies['vote_count'] >= most_voted]
 
 credits = pd.read_csv(c.DATA_PATH + 'credits.csv', low_memory = False)
 keywords_df = pd.read_csv(c.DATA_PATH + 'keywords.csv')
 
-
+count = 0
+total = len(most_voted_movies)
 for idx , movie in most_voted_movies.iterrows():
+
+    count += 1
+    print(f"Processing {count} out of {total} movies")
 
     movieDB_id = movie['id']
     title = movie['title']
@@ -27,11 +31,11 @@ for idx , movie in most_voted_movies.iterrows():
     vote_average = movie['vote_average']
     release_date = movie['release_date']
     popularity = movie['popularity']
-    poster_path = get_poster_path(movieDB_id)
-    director = get_director(movieDB_id, credits)
-    actors = get_main_actors(movieDB_id, credits)
-    genres = get_genres(movieDB_id, most_voted_movies)
-    keywords = get_keywords(movieDB_id, keywords_df)
+    poster_path = h.get_poster_path(movieDB_id)
+    director = h.get_director(movieDB_id, credits)
+    actors = h.get_main_actors(movieDB_id, credits)
+    genres = h.get_genres(movieDB_id, most_voted_movies)
+    keywords = h.get_keywords(movieDB_id, keywords_df)
 
     try:
       print(f"Adding movie: {title} with ID:{movieDB_id}")
@@ -79,25 +83,24 @@ for idx , movie in most_voted_movies.iterrows():
 
 
     cursor.execute("""SELECT id FROM movies WHERE title = %s """, (title,))
-    movie_id = cursor.fetchone()[0]
+    movie_id = cursor.fetchone()['id']
     for genre in genres:
       cursor.execute("""SELECT id FROM genres WHERE name = %s """, (genre,))
-      genre_id = cursor.fetchone()[0]
-
+      genre_id = cursor.fetchone()['id']
       cursor.execute("""
           INSERT INTO movie_genres (movie_id, genre_id) VALUES (%s,%s)
           """, (movie_id,genre_id))
 
     for actor in actors:
       cursor.execute("""SELECT id FROM actors WHERE name = %s""", (actor,))
-      actor_id = cursor.fetchone()[0]
+      actor_id = cursor.fetchone()['id']
       cursor.execute("""
           INSERT INTO movie_actors (movie_id, actor_id) VALUES (%s,%s)
           """, (movie_id,actor_id))
 
     for keyword in keywords:
       cursor.execute("""SELECT id FROM keywords WHERE name = %s""", (keyword,))
-      keyword_id = cursor.fetchone()[0]
+      keyword_id = cursor.fetchone()['id']
       cursor.execute("""
           INSERT INTO movie_keywords (movie_id, keyword_id) VALUES (%s,%s)
           """, (movie_id,keyword_id))	

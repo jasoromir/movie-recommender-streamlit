@@ -1,13 +1,17 @@
-import sqlite3
+import sqlite3, pymysql
 import config as c
 import pandas as pd
 import helpers as h
 
 
 # Establish connection with our database
-connection = sqlite3.connect(c.DB_FILE)
-connection.row_factory = sqlite3.Row
-cursor = connection.cursor()
+# connection = sqlite3.connect(c.DB_FILE)
+# connection.row_factory = sqlite3.Row
+# cursor = connection.cursor()
+
+connection = pymysql.connect(host=c.HOST, user=c.USERNAME, password=c.PASSWORD)
+cursor = connection.cursor(pymysql.cursors.DictCursor)
+cursor.execute("""USE movies_DB""")
 
 # Recompute the Score based on a weighted metric
 cursor.execute("""SELECT id, vote_counts, vote_average FROM movies""")
