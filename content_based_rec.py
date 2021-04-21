@@ -5,11 +5,14 @@ import streamlit as st
 
 # Recomendation filter based in metadata to compute similarity among the items(movies) of the dataset
 # Here, we will use: TITLE; GENRE, DIRECTOR, ACTORS, KEYWORDS
-def get_cos_sim():
+@st.cache
+def get_cos_sim(num_movies):
 	try:
-		cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix_small.npy")
-		#st.write(cos_sim.shape)
-		#TODO if shape is different to loaded movies: iincorporate new movies instead of recomputing
+		cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix.npy")
+		if len(cos_sim) != num_movies:
+			st.write('Recomputing similarity matrix')
+			cos_sim = h.compute_sim_mat()
+
 		#print('Loaded similarity matrix')
 	except Exception as e:
 		st.write('Computing similarity matrix')
@@ -18,14 +21,15 @@ def get_cos_sim():
 
 def get_recommendations(movie_idx, years, images_per_page, offset):
 
-	cos_sim = get_cos_sim()
-	cos_scores = cos_sim[movie_idx-1][:]
-	cos_scores = list(enumerate(cos_scores))
+	cursor = h.connect_db()
+	cursor.execute(""" SELECT COUNT(*) as num_movies FROM movies""");
+	num_movies = cursor.fetchone()['num_movies']
 
-	sorted_scores = sorted(cos_scores, key=lambda x: x[1], reverse=True)
+	cos_sim = get_cos_sim(num_movies)
+	cos_scores = cos_sim[movie_idx-1][:]
 
 	# GET MOVIES TO RECOMMEND
-	(ids, links, titles, scores) = h.get_movies_content_based(sorted_scores, years, images_per_page, offset)
+	(ids, links, titles, scores) = h.get_movies_content_based(cos_scores, years, images_per_page, offset)
 
 	
 	# DISPLAY MOVIES
