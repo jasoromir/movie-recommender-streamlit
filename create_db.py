@@ -7,8 +7,8 @@ import pymysql
 # CONNECT TO DATABASE OR CREATE IT IF DOES NOT EXIST
 connection = pymysql.connect(host=c.HOST, user=c.USERNAME, password=c.PASSWORD)
 cursor = connection.cursor(pymysql.cursors.DictCursor)
-cursor.execute("""CREATE DATABASE IF NOT EXISTS movies_DB2""")
-cursor.execute("""USE movies_DB2""")
+cursor.execute("""CREATE DATABASE IF NOT EXISTS movies_DB""")
+cursor.execute("""USE movies_DB""")
 
 
 # CREATE TABLE FOR MOVIES
