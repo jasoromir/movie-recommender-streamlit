@@ -1,16 +1,18 @@
-import sqlite3 
-import config as c
+
+from config import config as c
+from utils import populate_movies_db
+from utils import populate_user_ratings_db
 import pymysql
 
 
-
+# CONNECT TO DATABASE OR CREATE IT IF DOES NOT EXIST
 connection = pymysql.connect(host=c.HOST, user=c.USERNAME, password=c.PASSWORD)
 cursor = connection.cursor(pymysql.cursors.DictCursor)
-
 cursor.execute("""CREATE DATABASE IF NOT EXISTS movies_DB""")
 cursor.execute("""USE movies_DB""")
 
 
+# CREATE TABLE FOR MOVIES
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS movies(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,7 +27,7 @@ cursor.execute("""
     director VARCHAR(50) NOT NULL
 		)""");
 
-# Table for ACTORS
+# CREATE TABLE FOR ACTORS
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS actors(
 		id INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,7 +43,7 @@ cursor.execute("""
 		)
 	""");
 
-# Relational table MOVIE-GENRE
+# CREATE RELATIONAL TABLE FOR MOVIE-GENRE
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS movie_genres(
 		id INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,7 +54,7 @@ cursor.execute("""
 		)
 	""");
 
-# Relational table MOVIE-ACTOR
+# CREATE RELATIONAL TABLE FORMOVIE-ACTOR
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS movie_actors(
 		id INT AUTO_INCREMENT PRIMARY KEY,
@@ -63,7 +65,7 @@ cursor.execute("""
 		)
 	""");
 
-# Table for KEYWORDS
+# CREATE TABLE FOR KEYWORDS
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS keywords(
 		id INT AUTO_INCREMENT PRIMARY KEY,
@@ -71,7 +73,7 @@ cursor.execute("""
 		)
 	""");
 
-# Relational table MOVIE-KEYWORD
+# CREATE RELATIONAL TABLE FOR MOVIE-KEYWORD
 cursor.execute("""
 	CREATE TABLE IF NOT EXISTS movie_keywords(
 		id INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,8 +84,36 @@ cursor.execute("""
 		)
 	""");
 
+# CREATE TABLE FOR USERS
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        password VARCHAR(20)
+        )
+    """);
+
+# CREATE RELATIONAL TABLE FOR USER_MOVIE_RATING
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS user_ratings(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        movie_id INT NOT NULL,
+        rating INT,
+        FOREIGN KEY (movie_id) REFERENCES movies (id),
+        FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+    """);
 
 connection.commit()
+
+populate_movies_db.populate(connection, cursor)
+populate_movies_db.add_scores(connection, cursor)
+populate_user_ratings_db.populate(connection, cursor)
+
+# ======================================================
+# ============== OLD COLDE USING SQLITE ================
+# ======================================================
 
 
 # # OPEN or CREATE database
