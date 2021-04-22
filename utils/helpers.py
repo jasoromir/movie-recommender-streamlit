@@ -444,8 +444,8 @@ def compute_cosine_similarity(features):
 
 	# with open(f"{c.current_dir}/data/cos_sim_matrix.pkl", 'wb') as outfile:
 	# 	pickle.dump(cos_sim, outfile, pickle.HIGHEST_PROTOCOL)
-	for idx,row in enumerate(cos_sim):
-		np.save(f"{c.current_dir}/data/cos_sim_matrix_{idx}.npy", row)
+	for idx in range(len(cos_sim)):
+		np.save(f"{c.current_dir}/data/cos_sim_matrix_{idx}.npy", cos_sim[idx])
 
 	# return cos_sim
 
