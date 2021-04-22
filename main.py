@@ -1,14 +1,19 @@
+
+#import functions from folders
+from config import config as c
+from utils import helpers as h
+from utils import content_based_rec
+
+# import libraries
 import streamlit as st
 import pandas as pd 
 import numpy as np 
-import config as c
-import helpers as h
 import time
 from ast import literal_eval
-import sqlite3
-import content_based_rec
+# import sqlite3
 
 
+# PAGE TITLE
 st.set_page_config(page_title="Movie Recommender", layout='wide')
 st.title('Movies Recomender with Streamlit')
 

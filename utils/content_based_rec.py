@@ -1,11 +1,11 @@
-import config as c 
-import helpers as h
+from config import config as c 
+from utils import helpers as h
 import numpy as np
 import streamlit as st
 
 # Recomendation filter based in metadata to compute similarity among the items(movies) of the dataset
 # Here, we will use: TITLE; GENRE, DIRECTOR, ACTORS, KEYWORDS
-@st.cache
+@st.cache(suppress_st_warning=True)
 def get_cos_sim(num_movies):
 	try:
 		cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix.npy")
