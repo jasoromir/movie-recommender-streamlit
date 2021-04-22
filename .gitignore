@@ -3,4 +3,9 @@
 sqlite3.exe
 movies_db.db
 __pycache__
-my_secrets.py
+
+/config/AWS_RDS.txt
+/config/my_secrets.py
+/config/movie_recommender.pem
+/config/streamlit_movies.pem
+testing.py
