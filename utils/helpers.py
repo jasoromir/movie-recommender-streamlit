@@ -444,9 +444,10 @@ def compute_cosine_similarity(features):
 
 	# with open(f"{c.current_dir}/data/cos_sim_matrix.pkl", 'wb') as outfile:
 	# 	pickle.dump(cos_sim, outfile, pickle.HIGHEST_PROTOCOL)
-	np.save(f"{c.current_dir}/data/cos_sim_matrix.npy", cos_sim)
+	for idx,row in enumerate(cos_sim):
+		np.save(f"{c.current_dir}/data/cos_sim_matrix_{idx}.npy", row)
 
-	return cos_sim
+	# return cos_sim
 
 
 def compute_sim_mat():
@@ -516,7 +517,8 @@ def compute_sim_mat():
 		movie_features.append(features)
 		count += 1
 		computing_bar.progress(round(count/total_movies*100))
-	return compute_cosine_similarity(movie_features)
+	compute_cosine_similarity(movie_features)
+	# return compute_cosine_similarity(movie_features)
 
 
 def get_movies_content_based(cos_scores, years, images_per_page, offset):
