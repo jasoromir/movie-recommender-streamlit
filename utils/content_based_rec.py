@@ -8,7 +8,9 @@ import streamlit as st
 @st.cache(suppress_st_warning=True)
 def get_cos_sim(num_movies):
 	try:
-		cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix.npy")
+		with open(f"{c.current_dir}/data/cos_sim_matrix.pkl", 'rb') as infile:
+			cos_sim = pickle.load(infile) 
+		# cos_sim = np.load(f"{c.current_dir}/data/cos_sim_matrix.npy")
 		if len(cos_sim) != num_movies:
 			st.write('Recomputing similarity matrix')
 			cos_sim = h.compute_sim_mat()
