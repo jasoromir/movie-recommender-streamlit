@@ -1,16 +1,17 @@
-import config as c
+from utils  import function_cm as cm
+from config import config as c
+
+import streamlit as st
+import numpy as np
+import pymysql
 import requests
+import time
+import pickle
 from bs4 import BeautifulSoup
 from ast import literal_eval
-import numpy as np
-import sqlite3
-import pymysql
-import streamlit as st
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import time
-import function_cm as cm
-import pickle
+
 
 
 def get_poster_path(movie_id):

@@ -1,12 +1,13 @@
+
+from config   import config as c
+from .CFModel import CFModel
 import sklearn
-from sklearn.model_selection import train_test_split
-import tensorflow.compat.v1 as tf
-import sqlite3, pymysql
+import pymysql
 import pandas as pd
 import numpy as np
 import collections
-import config as c
-from CFModel import CFModel
+from sklearn.model_selection import train_test_split
+import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 tf.logging.set_verbosity(tf.logging.ERROR)
 

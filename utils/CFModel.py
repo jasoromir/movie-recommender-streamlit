@@ -5,7 +5,9 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 
 
 class CFModel(object):
-  """Simple class that represents a collaborative filtering model"""
+  """Simple class that represents a collaborative filtering model
+     ADAPTED FROM: https://developers.google.com/machine-learning/recommendation/
+     """
   def __init__(self, embedding_vars, loss, metrics=None):
     """Initializes a CFModel.
     Args:
