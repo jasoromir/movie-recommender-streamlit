@@ -442,7 +442,9 @@ def compute_cosine_similarity(features):
 	# Compute the similarity among all the movies
 	cos_sim = cosine_similarity(count_matrix, count_matrix)
 
-	np.save(f"{c.current_dir}/data/cos_sim_matrix.npy", cos_sim)
+	with open(f"{c.current_dir}/data/cos_sim_matrix.pkl", 'wb') as outfile:
+		pickle.dump(cos_sim, outfile, pickle.HIGHEST_PROTOCOL)
+	
 
 	return cos_sim
 
