@@ -2,9 +2,9 @@
 from config import my_secrets as s
 import os
 
-# Database
+# DEPRECATED: THIS WAS NECESSARY USING SQLITE3
 current_dir = os.getcwd()
-DB_FILE = f'{current_dir}/movies_db.db'
+DB_FILE = f'{current_dir}/movies_db2.db'
 
 DB_NAME = "movies_DB"
 USERNAME = s.USERNAME
