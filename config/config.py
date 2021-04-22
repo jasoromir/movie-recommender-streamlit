@@ -1,5 +1,6 @@
+
+from config import my_secrets as s
 import os
-import my_secrets as s
 
 # Database
 current_dir = os.getcwd()
